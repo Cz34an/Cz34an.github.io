@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovate Inc. - Witamy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        /* Custom Tailwind Configuration - Colors and fontFamily extensions removed */
+
+        /* Custom CSS Classes for Theme Colors and Fonts */
+        .custom-text-primary-green { color: #4CAF50; }
+        .custom-bg-primary-green { background-color: #4CAF50; }
+        .custom-hover-text-primary-green:hover { color: #4CAF50; }
+        .custom-hover-bg-primary-green:hover { background-color: #4CAF50; }
+        .custom-hover-text-white:hover { color: #FFFFFF; }
+
+
+        .custom-text-secondary-green { color: #8BC34A; }
+        .custom-bg-secondary-green { background-color: #8BC34A; }
+        .custom-hover-text-secondary-green:hover { color: #8BC34A; }
+        
+        .custom-text-accent-yellow { color: #FFC107; }
+        .custom-bg-accent-yellow { background-color: #FFC107; }
+        .custom-hover-text-accent-yellow:hover { color: #e6ac00; } 
+        .custom-hover-bg-accent-yellow:hover { background-color: #e6ac00; }
+        
+        .custom-text-dark { color: #333333; }
+        .custom-bg-dark { background-color: #333333; }
+        .custom-hover-bg-dark:hover { background-color: #222222; }
+
+
+        .custom-bg-light { background-color: #F9F9F9; }
+        .custom-text-light { color: #F9F9F9; }
+        
+        .custom-text-white { color: #FFFFFF; }
+
+
+        .custom-font-roboto-sans { font-family: 'Roboto', sans-serif; } 
+        .custom-font-lato { font-family: 'Lato', sans-serif; }
+        .custom-font-hero-heading { 
+            font-family: 'Roboto', sans-serif; 
+            font-weight: 700; 
+        }
+
+        .custom-gradient-stats {
+            background-image: linear-gradient(to bottom right, #E8F5E9, #DCEDC8); 
+        }
+
+
+        /* Additional custom styles */
+        body {
+            overflow-x: hidden; 
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #main-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50; 
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        .carousel-container { 
+            -webkit-overflow-scrolling: touch; 
+        }
+        
+        .product-carousel-wrapper { 
+            position: relative; 
+        }
+
+        .product-carousel-wrapper::before,
+        .product-carousel-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0; 
+            width: 80px; 
+            z-index: 15; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0; 
+        }
+        .product-carousel-wrapper::before { 
+            left: 0;
+            background: linear-gradient(to right, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+        }
+        .product-carousel-wrapper::after { 
+            right: 0;
+            background: linear-gradient(to left, rgba(255, 255, 255, 1) 20%, rgba(255, 255, 255, 0) 100%);
+        }
+        .product-carousel-wrapper.show-left-shadow::before,
+        .product-carousel-wrapper.show-right-shadow::after {
+            opacity: 1;
+        }
+
+        .carousel-item {
+            flex: 0 0 auto; 
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .carousel-item:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+        }
+
+
+        #mobile-menu-button { display: block; }
+        #desktop-menu-links { display: none; } 
+        #desktop-menu-cta { display: none; } 
+
+
+        @media (min-width: 1024px) { 
+            #mobile-menu-button { display: none; }
+            #desktop-menu-links { display: flex; } 
+            #desktop-menu-cta { display: flex; } 
+            #mobile-menu { display: none !important; }
+        }
+
+        .stat-number {
+            display: block; 
+        }
+
+        .carousel-arrow {
+            @apply absolute top-1/2 -translate-y-1/2 bg-white bg-opacity-75 hover:bg-opacity-100 p-2 rounded-full shadow-md transition-all duration-300; 
+        }
+        .carousel-arrow:disabled {
+            @apply opacity-30 cursor-not-allowed;
+        }
+        .carousel-arrow-left {
+            @apply left-2 sm:left-4;
+        }
+        .carousel-arrow-right {
+            @apply right-2 sm:right-4;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .lightbox-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; 
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .lightbox-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .lightbox-content img {
+            display: block;
+            max-width: 100%;
+            max-height: 85vh; 
+            border-radius: 0.5rem;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .lightbox-close, .lightbox-prev, .lightbox-next {
+            position: absolute;
+            background: rgba(30,30,30,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            z-index: 1001;
+        }
+        .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
+            background: rgba(0,0,0,0.9);
+        }
+        .lightbox-close {
+            top: 15px;
+            right: 15px;
+        }
+        .lightbox-prev {
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+        }
+        .lightbox-next {
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+        }
+
+        .testimonial-card {
+            @apply bg-white p-8 rounded-xl shadow-lg relative custom-font-lato text-gray-700;
+        }
+        .testimonial-card blockquote {
+            @apply text-lg italic mb-4 border-l-4 pl-4; 
+            border-color: #8BC34A; 
+            color: #555; 
+        }
+        .testimonial-author {
+            @apply font-bold text-xl custom-text-primary-green custom-font-roboto-sans mt-6; 
+        }
+        .testimonial-company {
+            @apply text-sm custom-font-lato mt-1; 
+            color: #777; 
+        }
+        .star-rating span {
+            color: #FFC107; 
+            font-size: 1.2rem;
+        }
+
+        /* Hero image grid styling - 1 large top, 2 smaller bottom */
+        .hero-image-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 1rem; 
+            align-items: start; 
+            perspective: 1200px; 
+        }
+        .hero-image-grid div {
+            border-radius: 0.75rem; 
+            box-shadow: 0 8px 20px -4px rgba(0,0,0,0.1), 0 6px 8px -4px rgba(0,0,0,0.04); 
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 100%;
+            object-fit: cover;
+            background-position: center;
+            background-size: cover;
+        }
+         .hero-image-grid div:hover {
+            transform: scale(1.03) !important; 
+            box-shadow: 0 15px 25px -8px rgba(0,0,0,0.2); 
+        }
+
+        .hero-img-large {
+            background-image: url('images/2.jpg');
+            height: 250px;
+            grid-column: 1 / -1; 
+            margin-bottom: 1rem; 
+            transform: rotate(-1.5deg) scale(1); 
+        }
+        .hero-img-small-1 {
+            height: 200px;
+            background-image: url('images/1.jpg');
+            grid-column: 1 / 2; 
+            transform: rotate(3deg) scale(0.9); 
+        } 
+        .hero-img-small-2 {
+            background-image: url('images/3.jpg');
+            grid-column: 2 / 3; 
+            height: 200px;
+            transform: rotate(-2.5deg) scale(0.92); 
+            margin-top: 8%; 
+        } 
+
+
+        /* Abstract Background Elements for About Us */
+        #about-us {
+            position: relative;
+            overflow: hidden; 
+        }
+        #about-us::before { 
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: -10%;
+            width: 250px;
+            height: 250px;
+            background-color: #8BC34A; 
+            border-radius: 50%;
+            opacity: 0.07;
+            z-index: 0; 
+            filter: blur(30px);
+            animation: float 10s ease-in-out infinite alternate;
+        }
+        #about-us::after { 
+            content: '';
+            position: absolute;
+            bottom: -5%;
+            right: -10%;
+            width: 350px;
+            height: 350px;
+            background-color: #4CAF50; 
+            opacity: 0.06;
+            z-index: 0;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); 
+            transform: rotate(25deg);
+            filter: blur(25px);
+            animation: float 12s ease-in-out infinite alternate-reverse;
+        }
+        .abstract-shape-1 { 
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            width: 150px;
+            height: 150px;
+            background-color: #FFC107; 
+            opacity: 0.05;
+            z-index: 0;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; 
+            transform: translate(-50%, -50%) rotate(-15deg);
+            filter: blur(15px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .abstract-shape-1 { animation-delay: -2s; } 
+        #about-us::after { animation-delay: -4s; }
+
+
+    </style>
+</head>
+<body class="custom-bg-light custom-font-roboto-sans custom-text-dark">
+
+    <header id="main-nav" role="banner" class="bg-white shadow-md">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20"> 
+                <div class="flex-shrink-0" data-aos="fade-right">
+                    <a href="#hero" class="text-2xl font-bold custom-text-primary-green">pod50</a>
+                </div>
+
+                <nav id="desktop-menu-links" role="navigation" aria-label="Main navigation" class="hidden lg:flex space-x-6 items-center">
+                    <a href="#about-us" class="custom-text-dark custom-hover-text-primary-green px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">O Nas</a>
+                    <a href="#products" class="custom-text-dark custom-hover-text-primary-green px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">Produkty</a>
+                    <a href="#gallery" class="custom-text-dark custom-hover-text-primary-green px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">Galeria</a>
+                    <a href="#testimonials" class="custom-text-dark custom-hover-text-primary-green px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">Opinie</a>
+                    <a href="#contact" class="custom-text-dark custom-hover-text-primary-green px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">Kontakt</a>
+                </nav>
+
+                <div id="desktop-menu-cta" class="hidden lg:flex items-center">
+                    <a href="#cta" class="custom-bg-accent-yellow custom-text-dark custom-hover-bg-accent-yellow font-semibold px-5 py-2.5 rounded-lg text-sm transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">Oferta</a>
+                </div>
+
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false" class="custom-text-dark custom-hover-text-primary-green focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 p-2 rounded-md">
+                        <span class="sr-only">Otwórz menu główne</span>
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="lg:hidden hidden bg-white shadow-lg">
+            <nav role="navigation" aria-label="Mobile navigation" class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#hero" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">Start</a>
+                <a href="#about-us" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">O Nas</a>
+                <a href="#products" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">Produkty</a>
+                <a href="#gallery" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">Galeria</a>
+                <a href="#testimonials" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">Opinie</a>
+                <a href="#contact" class="block custom-text-dark custom-hover-bg-primary-green custom-hover-text-white px-3 py-2 rounded-md text-base font-medium">Kontakt</a>
+                <div class="border-t border-gray-200 mt-3 pt-3">
+                    <a href="#cta" class="block custom-bg-accent-yellow custom-text-dark text-center custom-hover-bg-accent-yellow font-semibold px-3 py-2.5 rounded-lg text-base transition-all duration-300 transform hover:scale-105 shadow-md">Oferta</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main role="main">
+        <section id="hero" role="region" aria-labelledby="hero-heading" class="bg-white py-20 lg:pt-28 lg:pb-20 flex items-center">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-12 lg:items-center lg:gap-8"> 
+                    <div class="lg:col-span-6 xl:col-span-5 mb-12 lg:mb-0" data-aos="fade-right" data-aos-duration="1000"> 
+                        <div class="hero-image-grid">
+                            <div src="https://placehold.co/600x350/4CAF50/FFFFFF?text=G%C5%82%C3%B3wne+Portfolio" alt="Główne zdjęcie prezentujące portfolio lub kluczowy projekt" class="hero-img-large"></div>
+                            <div class="hero-img-small-1"></div>
+                            <div class="hero-img-small-2"></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-6 xl:col-span-7 text-center lg:text-left"> 
+                        <h1 id="hero-heading" class="text-4xl sm:text-5xl md:text-6xl custom-font-hero-heading tracking-tight leading-tight custom-text-dark" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100"> 
+                            Wszystko dla Domu, Ogrodu i Budowy!
+                        </h1>
+                        <p class="mt-6 text-lg sm:text-xl max-w-xl mx-auto lg:mx-0 custom-font-lato custom-text-dark opacity-80" data-aos="fade-left" data-aos-delay="300" data-aos-duration="1000"> 
+                             Od 1995 roku zaopatrujemy Lublin i okolice w najwyższej jakości artykuły metalowe, narzędzia, farby, artykuły hydrauliczne, elektryczne i wiele więcej. Odkryj nasz bogaty asortyment!
+                        </p>
+                        <a href="#contact" class="mt-10 inline-block custom-bg-primary-green custom-text-white hover:bg-opacity-80 font-bold py-3 px-8 rounded-lg text-lg transition-all duration-300 transform hover:scale-105" data-aos="fade-up" data-aos-delay="500" data-aos-duration="1000">
+                            Zobacz nasz asortyment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about-us" role="region" aria-labelledby="about-us-heading" class="py-16 sm:py-24 bg-white relative">
+            <div class="abstract-shape-1"></div> 
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12">
+                    <h2 id="about-us-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="fade-up">O Naszej Firmie</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="fade-up" data-aos-delay="100">Tradycja, Doświadczenie, Szeroki Wybór.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-6 text-gray-700 custom-font-lato text-left md:text-justify mb-16" data-aos="fade-in" data-aos-delay="200" data-aos-duration="1200">
+                    <p>
+                        Firma "Pod Pięćdziesiątką" powstała w 1995 roku i od tego czasu nieprzerwanie służy klientom z Lublina i okolic. Jesteśmy dumni z naszej długoletniej tradycji oraz bogatego doświadczenia w branży artykułów metalowych, budowlanych i przemysłowych. Naszym celem jest dostarczanie produktów najwyższej jakości w konkurencyjnych cenach. 
+                    </p>
+                    <p>
+                         W naszej ofercie znajdą Państwo szeroki wachlarz artykułów: od metalowych, przez narzędzia budowlane, artykuły ścierne, farby, kołki rozporowe, tarcze diamentowe, po silikony, piany poliuretanowe, elektrody, artykuły elektryczne, chemiczne i hydrauliczne. Nie zapominamy również o najmłodszych, oferując wybór zabawek. W sezonie letnim poszerzamy asortyment o ziemię, korę, podłoża do kwiatów, nasiona i odżywki.
+                    </p>
+                    <p>
+                        Ofertę kierujemy zarówno do klientów indywidualnych, poszukujących materiałów do drobnych remontów czy prac w ogrodzie, jak i do profesjonalistów, sklepów oraz hurtowni. Zapewniamy fachowe doradztwo i pomoc w wyborze odpowiednich produktów. 
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" role="region" aria-labelledby="stats-heading" class="py-16 sm:py-24 custom-gradient-stats"> 
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 id="stats-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="zoom-in-up">Nasze Doświadczenie w Liczbach</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="zoom-in-up" data-aos-delay="100">Jesteśmy z Wami od lat, dostarczając najlepsze produkty.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div data-aos="fade-up-right" data-aos-delay="200">
+                        <div class="text-5xl custom-text-primary-green mb-4" aria-hidden="true">📅</div>
+                        <span class="stat-number text-4xl sm:text-5xl font-bold custom-text-primary-green" data-target="30">0</span>
+                        <p class="mt-2 text-gray-700 custom-font-lato">Lat Doświadczenia (od 1995)</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="300">
+                        <div class="text-5xl custom-text-primary-green mb-4" aria-hidden="true">📦</div>
+                        <span class="stat-number text-4xl sm:text-5xl font-bold custom-text-primary-green" data-target="10000">0</span>
+                        <p class="mt-2 text-gray-700 custom-font-lato">Produktów w Ofercie</p>
+                    </div>
+                    <div data-aos="fade-up-left" data-aos-delay="400">
+                        <div class="text-5xl custom-text-primary-green mb-4" aria-hidden="true">😊</div>
+                        <span class="stat-number text-4xl sm:text-5xl font-bold custom-text-primary-green" data-target="95">0</span>
+                        <p class="mt-2 text-gray-700 custom-font-lato">% Zadowolonych Klientów</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" role="region" aria-labelledby="products-heading" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 id="products-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="fade-down">Polecane Produkty</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="fade-down" data-aos-delay="100">Oferujemy bogaty wybór artykułów dla profesjonalistów i majsterkowiczów.
+                </div>
+
+                <div class="product-carousel-wrapper flex flex-row items-center gap-2" data-aos="zoom-in" data-aos-delay="200">
+                    <button id="carousel-prev" class="carousel-arrow carousel-arrow-left custom-text-primary-green z-20" aria-label="Poprzedni Produkt">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+
+                    <div id="product-carousel-container" role="group" aria-label="Karuzela polecanych produktów" class="carousel-container flex flex-grow overflow-x-auto space-x-4 sm:space-x-6 pb-6 relative z-10">
+                        <div class="carousel-item product-card bg-white rounded-lg shadow-lg p-6 w-72 sm:w-80 md:w-96 flex-shrink-0">
+                            <img src="https://placehold.co/600x400/8BC34A/FFFFFF?text=Produkt+Alfa" alt="Produkt Alfa" class="w-full h-48 object-cover rounded-md mb-4" onerror="this.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Brak+Obrazu'">
+                            <h3 class="text-xl font-bold custom-text-primary-green mb-2">Produkt Alfa</h3>
+                            <p class="text-gray-600 custom-font-lato text-sm">Krótki opis produktu Alfa. Podkreślenie kluczowych cech i korzyści dla użytkownika.</p>
+                             <a href="#" class="mt-4 inline-block custom-text-accent-yellow custom-hover-text-accent-yellow font-semibold transition-colors duration-300">Dowiedz się więcej &rarr;</a>
+                        </div>
+                        <div class="carousel-item product-card bg-white rounded-lg shadow-lg p-6 w-72 sm:w-80 md:w-96 flex-shrink-0">
+                            <img src="https://placehold.co/600x400/4CAF50/FFFFFF?text=Produkt+Beta" alt="Produkt Beta" class="w-full h-48 object-cover rounded-md mb-4" onerror="this.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Brak+Obrazu'">
+                            <h3 class="text-xl font-bold custom-text-primary-green mb-2">Produkt Beta</h3>
+                            <p class="text-gray-600 custom-font-lato text-sm">Przegląd produktu Beta, skupiający się na jego innowacyjnych aspektach i możliwościach rozwiązywania problemów.</p>
+                            <a href="#" class="mt-4 inline-block custom-text-accent-yellow custom-hover-text-accent-yellow font-semibold transition-colors duration-300">Dowiedz się więcej &rarr;</a>
+                        </div>
+                        <div class="carousel-item product-card bg-white rounded-lg shadow-lg p-6 w-72 sm:w-80 md:w-96 flex-shrink-0">
+                            <img src="https://placehold.co/600x400/8BC34A/333333?text=Produkt+Gamma" alt="Produkt Gamma" class="w-full h-48 object-cover rounded-md mb-4" onerror="this.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Brak+Obrazu'">
+                            <h3 class="text-xl font-bold custom-text-primary-green mb-2">Produkt Gamma</h3>
+                            <p class="text-gray-600 custom-font-lato text-sm">Szczegóły dotyczące produktu Gamma, podkreślające jego unikalne propozycje sprzedaży i dopasowanie do rynku.</p>
+                            <a href="#" class="mt-4 inline-block custom-text-accent-yellow custom-hover-text-accent-yellow font-semibold transition-colors duration-300">Dowiedz się więcej &rarr;</a>
+                        </div>
+                        <div class="carousel-item product-card bg-white rounded-lg shadow-lg p-6 w-72 sm:w-80 md:w-96 flex-shrink-0">
+                            <img src="https://placehold.co/600x400/4CAF50/333333?text=Produkt+Delta" alt="Produkt Delta" class="w-full h-48 object-cover rounded-md mb-4" onerror="this.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Brak+Obrazu'">
+                            <h3 class="text-xl font-bold custom-text-primary-green mb-2">Produkt Delta</h3>
+                            <p class="text-gray-600 custom-font-lato text-sm">Odkryj produkt Delta, zaprojektowany z myślą o wydajności i skalowalności w nowoczesnych przedsiębiorstwach.</p>
+                            <a href="#" class="mt-4 inline-block custom-text-accent-yellow custom-hover-text-accent-yellow font-semibold transition-colors duration-300">Dowiedz się więcej &rarr;</a>
+                        </div>
+                    </div>
+                    <button id="carousel-next" class="carousel-arrow carousel-arrow-right custom-text-primary-green z-20" aria-label="Następny Produkt">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" role="region" aria-labelledby="gallery-heading" class="py-16 sm:py-24 custom-bg-light">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 id="gallery-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="fade-up">Nasza Galeria</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="fade-up" data-aos-delay="100">Zobacz nasz sklep i wybrane produkty.</p>
+                </div>
+                <div class="gallery-grid" data-aos="zoom-in-up" data-aos-delay="200">
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/4CAF50/FFFFFF?text=Regały+z+Narzędziami" alt="Regały pełne narzędzi w sklepie Pod Pięćdziesiątką" data-lightbox-src="https://placehold.co/1200x800/4CAF50/FFFFFF?text=Regały+z+Narzędziami">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/8BC34A/333333?text=Farby+i+Akcesoria" alt="Szeroki wybór farb i akcesoriów malarskich" data-lightbox-src="https://placehold.co/1200x800/8BC34A/333333?text=Farby+i+Akcesoria">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/4CAF50/FFFFFF?text=Artykuły+Metalowe" alt="Różnorodne artykuły metalowe i śruby" data-lightbox-src="https://placehold.co/1200x800/4CAF50/FFFFFF?text=Artykuły+Metalowe">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/8BC34A/333333?text=Dział+Ogrodniczy" alt="Artykuły ogrodnicze i nasiona" data-lightbox-src="https://placehold.co/1200x800/8BC34A/333333?text=Dział+Ogrodniczy">
+                    </div>
+                     <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/4CAF50/FFFFFF?text=Obsługa+Klienta" alt="Przyjazna obsługa klienta w sklepie" data-lightbox-src="https://placehold.co/1200x800/4CAF50/FFFFFF?text=Obsługa+Klienta">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://placehold.co/600x400/8BC34A/333333?text=Wejście+do+Sklepu" alt="Wejście do sklepu Pod Pięćdziesiątką" data-lightbox-src="https://placehold.co/1200x800/8BC34A/333333?text=Wejście+do+Sklepu">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="lightboxModal" class="lightbox-modal">
+            <div class="lightbox-content">
+                <button id="lightboxClose" class="lightbox-close" aria-label="Zamknij">&times;</button>
+                <button id="lightboxPrev" class="lightbox-prev" aria-label="Poprzednie zdjęcie">&#10094;</button>
+                <img id="lightboxImage" src="" alt="Powiększone zdjęcie z galerii">
+                <button id="lightboxNext" class="lightbox-next" aria-label="Następne zdjęcie">&#10095;</button>
+            </div>
+        </div>
+
+        <section id="testimonials" role="region" aria-labelledby="testimonials-heading" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 id="testimonials-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="fade-up">Opinie Naszych Klientów</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="fade-up" data-aos-delay="100">Co mówią o nas Ci, którzy nam zaufali.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+                    <div class="testimonial-card" data-aos="flip-left" data-aos-delay="200">
+                        <blockquote class="mb-4">"Świetnie zaopatrzony sklep, zawsze znajduję to, czego potrzebuję. Profesjonalna obsługa i dobre ceny!"</blockquote>
+                        <p class="testimonial-author">Jan K., Lublin</p>
+                        <p class="testimonial-company">Zadowolony Klient</p>
+                    </div>
+                    <div class="testimonial-card" data-aos="flip-left" data-aos-delay="300">
+                        <blockquote class="mb-4">"Duży wybór i konkurencyjne ceny. Regularnie robię tu zakupy do mojego warsztatu. Obsługa zawsze pomocna."</blockquote>
+                        <p class="testimonial-author">Ewa S.</p>
+                        <p class="testimonial-company">Majsterkowicz</p>
+                    </div>
+                    <div class="testimonial-card" data-aos="flip-left" data-aos-delay="400">
+                        <blockquote class="mb-4">"Polecam! Miła atmosfera i fachowe doradztwo. Wracam tu od lat po artykuły do domu i ogrodu."</blockquote>
+                        <p class="testimonial-author">Marek P.</p>
+                        <p class="testimonial-company">Stary Klient</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="cta" role="region" aria-labelledby="cta-heading" class="py-16 sm:py-20 custom-bg-secondary-green custom-text-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 id="cta-heading" class="text-3xl sm:text-4xl font-bold mb-4 custom-text-white" data-aos="fade-up">Masz Pytania lub Szukasz Konkretnego Produktu?</h2>
+                <p class="text-lg sm:text-xl mb-8 max-w-2xl mx-auto custom-font-lato custom-text-white" data-aos="fade-up" data-aos-delay="100">
+                    Odwiedź nas lub skontaktuj się – chętnie pomożemy!
+                </p>
+                <a href="#contact" class="cta-button custom-bg-accent-yellow custom-text-dark hover:bg-yellow-400 font-bold py-4 px-10 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" data-aos="fade-up" data-aos-delay="200">
+                    Skontaktuj Się z Nami
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" role="region" aria-labelledby="contact-heading" class="py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 id="contact-heading" class="text-3xl sm:text-4xl font-bold custom-text-dark" data-aos="fade-up">Skontaktuj Się z Nami</h2>
+                    <p class="mt-4 text-lg text-gray-600 custom-font-lato" data-aos="fade-up" data-aos-delay="100">Zapraszamy do naszego sklepu lub kontaktu telefonicznego i mailowego.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-10 items-start">
+                    <div class="space-y-6 text-gray-700 custom-font-lato" data-aos="fade-right" data-aos-delay="200">
+                        <div>
+                            <h3 class="text-xl font-semibold custom-text-primary-green mb-2">Adres Sklepu</h3>
+                            <p>ul. Zbożowa 50<br>20-827 Lublin</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold custom-text-primary-green mb-2">Telefony Kontaktowe</h3>
+                            <p>tel: 81 746 63 75</p>
+                            <p>kom: 518 977 182, 507 493 453</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold custom-text-primary-green mb-2">Adres E-mail</h3>
+                            <p><a href="mailto:pod50@wp.pl" class="custom-hover-text-accent-yellow transition-colors duration-300">pod50@wp.pl</a></p>
+                        </div>
+                         <div>
+                            <h3 class="text-xl font-semibold custom-text-primary-green mb-2">Godziny Otwarcia</h3>
+                            <p>Poniedziałek - Piątek: 7:00 - 20:00</p>
+                            <p>Sobota: 9:00 - 16:00</p>
+                        </div>
+                    </div>
+                    <div data-aos="fade-left" data-aos-delay="200">
+                        <h3 class="text-xl font-semibold custom-text-primary-green mb-4 md:text-left text-center">Znajdź Nas na Mapie</h3>
+                        <div id="map-placeholder" class="w-full h-72 sm:h-96 bg-gray-200 rounded-lg shadow-md flex items-center justify-center text-gray-500" role="application" aria-label="Miejsce na mapę">
+                            Obszar Mapy (Wymagana Integracja Mapy Google)
+                        </div>
+                         <p class="mt-4 text-sm text-gray-500 custom-font-lato md:text-left text-center">
+                            Zapraszamy do odwiedzenia nas osobiście!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo" class="custom-bg-dark custom-text-light py-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="mb-4" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+                 <a href="#hero" class="text-xl font-bold custom-text-primary-green">pod50</a>
+            </div>
+            <nav role="navigation" aria-label="Footer navigation" class="space-x-6 mb-4 custom-font-lato" data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-delay="100">
+                <a href="#about-us" class="custom-hover-text-secondary-green transition-colors duration-300">O Nas</a>
+                <a href="#stats" class="custom-hover-text-secondary-green transition-colors duration-300">Osiągnięcia</a>
+                <a href="#brands" class="custom-hover-text-secondary-green transition-colors duration-300">Asortyment</a>
+                <a href="#gallery" class="custom-hover-text-secondary-green transition-colors duration-300">Galeria</a>
+                <a href="#testimonials" class="custom-hover-text-secondary-green transition-colors duration-300">Opinie</a>
+                <a href="#contact" class="custom-hover-text-secondary-green transition-colors duration-300">Kontakt</a>
+                <a href="#" class="custom-hover-text-secondary-green transition-colors duration-300">Polityka Prywatności</a>
+            </nav>
+            <p class="text-sm text-gray-400 custom-font-lato" data-aos="fade-up" data-aos-anchor-placement="top-bottom" data-aos-delay="200">&copy; <span id="currentYear"></span> Pod Pięćdziesiątką. Wszelkie prawa zastrzeżone.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true, 
+                mirror: false 
+            });
+
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    const isHidden = mobileMenu.classList.toggle('hidden'); 
+                    mobileMenuButton.setAttribute('aria-expanded', String(isHidden ? false : true)); 
+                    const icon = mobileMenuButton.querySelector('svg');
+                    if (!mobileMenu.classList.contains('hidden')) { 
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+                    } else { 
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
+                    }
+                });
+            }
+
+            // Smooth Scroll & Close Mobile Menu
+            const navLinks = document.querySelectorAll('#desktop-menu-links a, #mobile-menu a, footer a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+
+                        if (targetElement) {
+                            const navHeight = document.getElementById('main-nav').offsetHeight;
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                            
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+
+                            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                                mobileMenu.classList.add('hidden');
+                                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                                const icon = mobileMenuButton.querySelector('svg');
+                                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />';
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Animate Stats Numbers
+            function animateValue(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    element.innerText = Math.floor(progress * (end - start) + start).toLocaleString();
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                         element.innerText = end.toLocaleString(); 
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+            const statsSection = document.getElementById('stats');
+            if (statsSection) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const statNumbers = entry.target.querySelectorAll('.stat-number');
+                            statNumbers.forEach(el => {
+                                const target = parseInt(el.dataset.target);
+                                if (!el.dataset.animated) { 
+                                    animateValue(el, 0, target, 2000); 
+                                    el.dataset.animated = true; 
+                                }
+                            });
+                        }
+                    });
+                }, { threshold: 0.2 }); 
+                observer.observe(statsSection);
+            }
+
+            // Lightbox Gallery
+            const lightboxModal = document.getElementById('lightboxModal');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxClose = document.getElementById('lightboxClose');
+            const lightboxPrev = document.getElementById('lightboxPrev');
+            const lightboxNext = document.getElementById('lightboxNext');
+            const galleryImgElements = document.querySelectorAll('.gallery-item img'); 
+            let currentImageIndex = 0;
+            let imagesData = [];
+
+            if (lightboxModal && galleryImgElements.length > 0) {
+                galleryImgElements.forEach((item, index) => { 
+                    imagesData.push({
+                        thumbSrc: item.src,
+                        fullSrc: item.dataset.lightboxSrc || item.src, 
+                        alt: item.alt
+                    });
+                    item.addEventListener('click', () => {
+                        currentImageIndex = index;
+                        openLightbox();
+                    });
+                });
+
+                function openLightbox() {
+                    if (imagesData[currentImageIndex]) {
+                        lightboxImage.src = imagesData[currentImageIndex].fullSrc;
+                        lightboxImage.alt = imagesData[currentImageIndex].alt;
+                        lightboxModal.classList.add('open');
+                        updateLightboxNav();
+                    }
+                }
+
+                function closeLightbox() {
+                    lightboxModal.classList.remove('open');
+                }
+
+                function showPrevImage() {
+                    currentImageIndex = (currentImageIndex - 1 + imagesData.length) % imagesData.length;
+                    openLightbox();
+                }
+
+                function showNextImage() {
+                    currentImageIndex = (currentImageIndex + 1) % imagesData.length;
+                    openLightbox();
+                }
+                
+                function updateLightboxNav() {
+                    lightboxPrev.style.display = imagesData.length > 1 ? 'flex' : 'none';
+                    lightboxNext.style.display = imagesData.length > 1 ? 'flex' : 'none';
+                }
+
+
+                lightboxClose.addEventListener('click', closeLightbox);
+                lightboxPrev.addEventListener('click', showPrevImage);
+                lightboxNext.addEventListener('click', showNextImage);
+                
+                lightboxModal.addEventListener('click', (e) => { 
+                    if (e.target === lightboxModal) {
+                        closeLightbox();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => { 
+                    if (lightboxModal.classList.contains('open')) {
+                        if (e.key === 'Escape') closeLightbox();
+                        if (e.key === 'ArrowLeft' && imagesData.length > 1) showPrevImage();
+                        if (e.key === 'ArrowRight' && imagesData.length > 1) showNextImage();
+                    }
+                });
+            }
+
+
+            // Current Year in Footer
+            const currentYearElement = document.getElementById('currentYear');
+            if (currentYearElement) {
+                currentYearElement.textContent = new Date().getFullYear();
+            }
+
+            // Nav background on scroll
+            const nav = document.getElementById('main-nav');
+            if (nav) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        nav.classList.add('bg-opacity-90', 'backdrop-blur-md', 'shadow-xl');
+                        nav.classList.remove('shadow-md');
+                    } else {
+                        nav.classList.remove('bg-opacity-90', 'backdrop-blur-md', 'shadow-xl');
+                        nav.classList.add('shadow-md');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
